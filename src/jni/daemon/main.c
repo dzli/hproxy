@@ -10,13 +10,6 @@
 #endif
 
 #include "fctl.h"
-#include "forticlient.h"
-//#include "fctroot_command.h"
-#ifdef __APPLE__
-#include "../include/av/avutil.h"
-#endif
-#include "share_mem_util.h"
-#include "share_data.h"
 
 void daemonize();
 static void usage(char *filename);

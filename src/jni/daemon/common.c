@@ -1,12 +1,16 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include <stdarg.h>
 #include <errno.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "forticlient.h"
+#include <time.h>
+
+#include "common.h"
 #include "conf.h"
-//#include "log.h"
+#include "log.h"
 
 
 static inline void split_ports(int *ports , char *buf){

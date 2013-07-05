@@ -6,7 +6,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE := aproxy
 LOCAL_CFLAGS := -I daemon/include
-LOCAL_SRC_FILES := daemon/main.c daemon/nat.c  daemon/proxy_container.c daemon/proxy.c daemon/proxy_noblock.c daemon/session.c \
+LOCAL_SRC_FILES := daemon/main.c daemon/nat.c  daemon/proxy_mgr.c daemon/proxy_util.c daemon/proxy_core.c daemon/session.c \
                    daemon/http.c daemon/http_parser.c daemon/rwbuff.c daemon/cache.c  daemon/log.c daemon/input_stream.c \
                    daemon/conf.c daemon/common.c 
 include $(BUILD_EXECUTABLE)

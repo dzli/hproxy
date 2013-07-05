@@ -6,16 +6,11 @@
 
 #ifdef __linux__
 #include <linux/netfilter_ipv4.h>
-//#include <linux/netfilter_ipv4/ip_nat.h>
 #endif
 
 #include <sys/un.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <sysinfo.h>
-//#include <fctav.h>
-//#include "../include/settings.h"
-#include "../include/confutil.h"
 
 static int np_run(struct fctl_proxy_t* proxy);
 static  int __do_local_send(struct fctl_proxy_t* proxy, struct fctl_session_t *session);

@@ -12,10 +12,10 @@
 #include <sys/socket.h>
 #include <time.h>
 
+#include "common.h"
 #include "list.h"
 #include "log.h"
 #include "rwbuff.h"
-#include "forticlient.h"
 #include "cache.h"
 
 //#define HTTP_RECV_ALL_TRAFFIC 1
