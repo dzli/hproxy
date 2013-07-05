@@ -745,43 +745,25 @@ static int np_do_proxy(struct fctl_proxy_t* proxy){
 
     int listenfd = 0; // worker_listenfd = 0, 
     int nready = 0;
-   
-    //struct sockaddr_in cliaddr;	
     int clilen = 0 , ret = 0;	
 
-   // FcckUpdateCookie();	
-   // SiInitialize(g_conf.home_dir);
-
-    INFOLOG("vvvvvvvvvvvvvvvvvvvv");
     listenfd = proxy->listen(proxy);
     if (listenfd < 0){
         ERRLOG("proxy can not start");
 	 return -1;	
     }
-    INFOLOG("00000000000000000vvvvvvvvv");
     
-   /* worker_listenfd = proxy->worker_listen(proxy);
-    INFOLOG("111111111111100000000000000000vvvvvvvvv");
-    if (worker_listenfd < 0){
-        ERRLOG("worker socket can not start");
-	 return -2;	
-    }*/
-	
-    INFOLOG("vvvvvvvvvvvvvvvvvvvv111111111111");
     if (set_noneblock(listenfd) < 0){
 	    ERRLOG("socket can not be set none block.");	
         return  -2;
     }
-    INFOLOG("vvvvvvvvvvvvvvvvvvvv22222222222222222");
 		
     maxfd = listenfd; // > worker_listenfd ? listenfd : worker_listenfd;
 	
     FD_ZERO(&all_read_set);
     FD_ZERO(&all_write_set);
     FD_SET(listenfd, &all_read_set);
-   // FD_SET(worker_listenfd, &all_read_set);
   
-    INFOLOG("vvvvvvvvvvvvvvvvvvvv333333333333333");
 #if ENABLE_SELF_TEST
     //Proxy self test
     //When FortiClient starts, a program called proxytest runs . It connects to  a ip's 80 port.
@@ -820,17 +802,6 @@ static int np_do_proxy(struct fctl_proxy_t* proxy){
             
      	 }
      	
-#if 0
-     	 if (FD_ISSET(worker_listenfd, &rset)) {  /* new client connection */
-             
-              __do_notification(proxy , worker_listenfd);
-
-            //  if (--nready <= 0)
-            //       continue;          
-            
-     	 }
-     	 
-#endif
 	     struct list_head *pos =  NULL;	  
          
          int i = 0;
@@ -945,16 +916,7 @@ static int np_run(struct fctl_proxy_t* proxy){
     #endif
     
    if ( (childpid = fork()) == 0) { 
-       FILE* fp = fopen("/tmp/proxy1.log", "a+");
-       if (fp){
-           fprintf(fp, "%s\n", "12345");
-           fclose(fp);
-        }
        //log_init(20, 1, "/tmp/proxy.log");
-       printf("dddddddd\n");    
-#ifdef __linux__
-      // av_register_trusted_module(NULL);
-#endif
       err = signal(SIGHUP , sig_reload_config);
       if (err ==  SIG_ERR){
         ERRLOG("can not install the signal  handler for SIGHUP");
