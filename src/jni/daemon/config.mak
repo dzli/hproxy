@@ -1,0 +1,2 @@
+PLATFORM=Linux
+ARCH=i386
