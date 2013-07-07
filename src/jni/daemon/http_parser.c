@@ -546,7 +546,8 @@ int http_update_req(struct http_parser_t* hp, char* buffer, int buflen1)
 					(memcmp("GET ", buffer, 4) == 0 ||
 					 memcmp("POST", buffer, 4) == 0 ||
 					 memcmp("HEAD", buffer, 4) == 0 ||
-					 memcmp("PUT ", buffer, 4) == 0)){
+					 memcmp("PUT ", buffer, 4) == 0 ||
+					 memcmp("OPTIONS", buffer, 7) == 0)){
 					hp->status = PARSE_STA_SEEN_GET;
 				}else{
 					hp->status = PARSE_STA_NOT_HTTP;

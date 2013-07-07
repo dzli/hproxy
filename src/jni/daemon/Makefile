@@ -12,9 +12,9 @@ OBJS= main.o nat.o scanner.o fccheck.o proxy_container.o proxy.o proxy_noblock.o
       rwbuff.o cache.o http_parse.o  handle_command.o sysinfo_mac.o 
 TARGET_PROG_EXTRAS=../util/libfctcommon.a  $(TOPDIR)/src/thirdparty/pcre/.libs/libpcre.a 
 else
-OBJS= main.o nat.o  proxy_container.o proxy.o proxy_noblock.o session.o spool.o\
+OBJS= main.o nat.o  proxy_mgr.o proxy_util.o proxy_core.o session.o \
       http.o http_parser.o\
-      rwbuff.o cache.o  http_parse.o  log.o input_stream.o base64.o  conf.o  common.o share_mem_util.o
+      rwbuff.o cache.o  log.o input_stream.o  conf.o  common.o 
 #TARGET_PROG_EXTRAS=../util/libfctcommon.a  $(TOPDIR)/src/thirdparty/pcre/.libs/libpcre.a 
 endif
 
