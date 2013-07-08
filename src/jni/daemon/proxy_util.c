@@ -63,76 +63,6 @@ static int proxy_listen(struct fctl_proxy_t* proxy){
     return listenfd;	
 }
 
-int proxy_worker_listen(struct fctl_proxy_t* proxy){
-
-    int listenfd = 0;
-    socklen_t len = 0;
-    struct sockaddr_un  servaddr , addr2;
-   
-    if((listenfd= socket(AF_LOCAL, SOCK_DGRAM, 0))<0){
-        ERRLOG("%s worker socket error: %s", strerror(errno));
-        return( -1 ); 
-    }
-   
-    unlink(proxy->worker_sock_path);
-  			   
-    memset(&servaddr,0,sizeof(struct sockaddr_un));
-    servaddr.sun_family = AF_LOCAL;
-    strncpy(servaddr.sun_path, proxy->worker_sock_path, sizeof(servaddr.sun_path) - 1);
-
-    
-    if (bind(listenfd, (struct sockaddr*)&servaddr, sizeof(servaddr))<0){
-	    ERRLOG("%s worker socket bind error: %s", strerror(errno));
-	    return(-2);
-    }
-
-    len = sizeof(struct sockaddr_un);
-    getsockname(listenfd, (struct sockaddr*)&addr2, &len);
- 
-    INFOLOG("%s worker socket start and bound name = %s",proxy->proto->proto_name, addr2.sun_path);
- 	
-    return listenfd;	
-
-    return 0;
-}
-
-
-int proxy_send_event(struct fctl_proxy_t* proxy,struct event_header_t* header){
-/*    int     ret = 0, sockfd;
-    struct sockaddr_un cliaddr, servaddr;
-
-    sockfd = socket(AF_LOCAL, SOCK_DGRAM, 0);
-    if (sockfd < 0){
-        ERRLOG("socket error:%s", strerror(errno));
-        return -3;
-    }
-
-    bzero(&servaddr, sizeof(servaddr)); 
-    servaddr.sun_family = AF_LOCAL;
-    strcpy(servaddr.sun_path, proxy->worker_sock_path);
-    
-    int servlen = sizeof(struct sockaddr_un);
-    for(;;){
-        int n = sendto(sockfd, header, header->event_len, 0, 
-            (struct sockaddr*)&servaddr, servlen);
-        if (n < 0){
-            if (errno == EINTR) continue;
-            ERRLOG("send error:%s", strerror(errno));   
-            ret = -1;
-            break;    
-        }
-        if (n < header->event_len){
-            ERRLOG("send error:%s", "send less data");
-            ret = -2;
-        }
-        break;
-    }
-    
-    return ret;
-*/
-    return 0;
-}
-
 struct fctl_proxy_t* proxy_new(struct fctl_proto_t* proto, int port, 
     int max_bind_port ,int min_bind_port){
     
@@ -157,8 +87,6 @@ struct fctl_proxy_t* proxy_new(struct fctl_proto_t* proto, int port,
     proxy->read = proxy_read;
     proxy->write = proxy_write;	
     proxy->listen = proxy_listen;
-    proxy->worker_listen = proxy_worker_listen;
-    proxy->send_event = proxy_send_event;
         	
     return proxy;	
 }

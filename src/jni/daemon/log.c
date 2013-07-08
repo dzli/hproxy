@@ -24,7 +24,7 @@ void log_get_source_desc(int source, char* source_desc , int len);
 static  int log_level  = FCTLOG_LEVEL_ERROR;
 static char* sock_file = NULL;
 static int log_source  = FCTLOG_SOURCE_PROXY;
-static int  where = FCTLOG_TO_SOCK;
+static int  where = FCTLOG_TO_FILE;
 static int log_file_fd = -1;
 
 #ifdef __APPLE__
@@ -86,97 +86,32 @@ void log_init_ex(int level, int source , char* file, int to){
     #endif
 }
 
-
-static int send_log(struct fct_log_t* log){
-    int     ret = 0, sockfd = -1;
-    struct sockaddr_un cliaddr, servaddr;
-
-    if (sock_file == NULL)
-        return -4;
-        
-    sockfd = socket(AF_LOCAL, SOCK_DGRAM, 0);
-    if (sockfd < 0){
-        return -3;
-    }
-
-    bzero(&servaddr, sizeof(servaddr)); 
-    servaddr.sun_family = AF_LOCAL;
-    strcpy(servaddr.sun_path, sock_file);
-    
-    int servlen = sizeof(struct sockaddr_un);
-    for(;;){
-        int n = sendto(sockfd, log, sizeof(struct fct_log_t), 0, 
-            (struct sockaddr*)&servaddr, servlen);
-        if (n < 0){
-            if (errno == EINTR) continue;
-            ret = -1;
-            break;    
-        }
-        if (n < sizeof(struct fct_log_t)){
-            ret = -2;
-        }
-        break;
-    }
-    #define SAFE_CLOSE(x)	if (x > 0)	{while (close(x) == -1 && errno == EINTR);}
-        
-    SAFE_CLOSE(sockfd);
-    
-    return ret;
-}
-
-/*
-static inline void __log(const char *szMsg, va_list ap ){
-    char buffer1[128];
-    
-    time_t now;
-    struct timeval tv;
-
-	va_list marker;
-	char szTmp[4096];
-
-    time(&now);
-    gettimeofday(&tv, 0);
-
-    strftime(buffer1, sizeof(buffer1), "%Y/%m/%d %T", localtime(&now));
-    snprintf(szTmp, sizeof(szTmp), "%s.%03d ", buffer1, (int)tv.tv_usec / 1000);
- 
-    int len = strlen(szTmp);
-	vsnprintf(szTmp + len,sizeof(szTmp)- len, szMsg, ap);
-	           
-
-    fprintf(stderr, "%s\n", szTmp);
-}*/
-
-
 static inline void __log(const char *szMsg, int level , va_list ap ){
-    char buffer1[128];
+    char level_str[32];
+    log_get_level_desc(level, level_str, sizeof(level_str));
     
     time_t now;
     struct timeval tv;
-
-	va_list marker;
-	char szTmp[4096];
-
-	vsnprintf(szTmp ,sizeof(szTmp), szMsg, ap);
-	           
-    struct fct_log_t log;
-    log.type = FCTLOG_GENERAL;
-    log.source = log_source;
-    log.level = level;
-    log.time = time(0);
-    snprintf(log.content, sizeof(log.content) , "%s", szTmp);
-
+ 	time(&now);
+    gettimeofday(&tv, 0);
+  	char time_str[32];
+    strftime(time_str, sizeof(time_str), "%Y/%m/%d %T", localtime(&now));
+    
 #ifdef __linux__
- //   if (where == FCTLOG_TO_SOCK)
- //       send_log(&log);
- //   else{
-        printf("%s\n", szTmp);
-        FILE* fp = fopen("/tmp/proxy.log", "a+");
+	if (where & FCTLOG_TO_CONSOLE){
+		printf( "%s.%03d [%s] ",time_str, localtime(&now), level_str);
+		vprintf(szMsg, ap);
+		printf("\n");
+	}
+	if ((where & FCTLOG_TO_FILE) && sock_file != NULL){
+        FILE* fp = fopen(sock_file, "a+");
         if (fp){
-            fprintf(fp, "%s\n", szTmp);
+            fprintf(fp,  "%s.%03d [%s] ",time_str, localtime(&now), level_str);
+            vfprintf(fp, szMsg, ap);
+			fprintf(fp, "\n");
             fclose(fp);
         }
- //   }
+    }
 #endif
 
 #ifdef __APPLE__

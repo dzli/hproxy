@@ -33,8 +33,8 @@ enum fct_log_source{
 	Where does log will to
 */
 enum fct_log_dest{
-    FCTLOG_TO_CONSOLE,
-    FCTLOG_TO_SOCK
+    FCTLOG_TO_CONSOLE = 1,
+    FCTLOG_TO_FILE  = 2,
 };
 
 

@@ -39,33 +39,13 @@ int  load_conf(struct   fctl_conf_t* conf, char* filename){
 		return -1;
 	}     
 	
-	LOAD_STRING(pconf , "home_dir" , conf->home_dir , MAX_FILE_NAME);
 	LOAD_STRING(pconf , "conf_file" , conf->conf_file , MAX_FILE_NAME);
-	LOAD_STRING(pconf , "log_dir" ,   conf->log_dir , MAX_FILE_NAME);
 	LOAD_STRING(pconf , "log_file" ,   conf->log_file, MAX_FILE_NAME);
 	LOAD_STRING(pconf , "pid_file" ,   conf->pid_file , MAX_FILE_NAME);
-	LOAD_STRING(pconf , "av_service" ,   conf->av_service , MAX_FILE_NAME);
-	LOAD_STRING(pconf , "avlog_service" ,   conf->avlog_service , MAX_FILE_NAME);
-	LOAD_STRING(pconf , "avrt_service" ,   conf->avrt_service , MAX_FILE_NAME);
-	LOAD_STRING(pconf , "avcrt_service" ,   conf->avcrt_service , MAX_FILE_NAME);
-	LOAD_STRING(pconf , "clamscan" ,   conf->clamscan , MAX_FILE_NAME);
-	LOAD_STRING(pconf , "freshclam" ,   conf->freshclam , MAX_FILE_NAME);
-    LOAD_STRING(pconf , "clamd_sock" ,   conf->clamd_sock , MAX_FILE_NAME);
-	LOAD_STRING(pconf , "spool_dir" ,   conf->spool_dir , MAX_FILE_NAME);
     LOAD_STRING(pconf , "iptables" ,   conf->iptables , MAX_FILE_NAME);
-    LOAD_STRING(pconf , "avlogd_sock" ,   conf->avlogd_sock , MAX_FILE_NAME);
-    LOAD_STRING(pconf , "avlog_file" ,   conf->avlog_file , MAX_FILE_NAME);
-    LOAD_STRING(pconf , "avlisten_sock" ,   conf->avlisten_sock , MAX_FILE_NAME);
-    LOAD_STRING(pconf , "av_quarantine_dir" ,   conf->av_quarantine_dir , MAX_FILE_NAME);
-    LOAD_STRING(pconf , "fctdb_file" ,   conf->fctdb_file , MAX_FILE_NAME);
-    LOAD_STRING(pconf , "av_sig_dir" ,   conf->av_sig_dir , MAX_FILE_NAME);
     
     LOAD_INT(pconf , "get_original_destination", conf->get_original_destination);
     LOAD_INT(pconf , "log_level", conf->log_level);
-    LOAD_STRING(pconf , "serial_number" , conf->serial_number, sizeof(conf->serial_number));
-    LOAD_STRING(pconf , "UID" , conf->UID, sizeof(conf->UID));
-    LOAD_INT(pconf , "enable_proxy", conf->enable_proxy);
-    LOAD_INT(pconf , "expired_date", conf->expiry_date);
     
 	LOAD_INT(pconf , "enable_http" , conf->enable_http);
 	LOAD_INT(pconf , "http_proxy_listen_port" , conf->http_proxy_listen_port);
@@ -74,59 +54,7 @@ int  load_conf(struct   fctl_conf_t* conf, char* filename){
     LOAD_STRING(pconf , "http_port" , ports , sizeof(ports));
     split_ports(conf->http_ports, ports);
     
-	LOAD_INT(pconf , "enable_ftp" , conf->enable_ftp);
-	LOAD_STRING(pconf , "ftp_port" , ports , sizeof(ports));
-    split_ports(conf->ftp_ports, ports);
-	LOAD_INT(pconf , "ftp_proxy_listen_port" , conf->ftp_proxy_listen_port);
-	LOAD_INT(pconf , "ftp_min_bind_port" , conf->ftp_min_bind_port);
-	LOAD_INT(pconf , "ftp_max_bind_port" , conf->ftp_max_bind_port);
 	
-	LOAD_INT(pconf , "enable_pop3" , conf->enable_pop3);
-	LOAD_STRING(pconf , "pop3_port" , ports , sizeof(ports));
-    split_ports(conf->pop3_ports, ports);
-	LOAD_INT(pconf , "pop3_proxy_listen_port" , conf->pop3_proxy_listen_port);
-	LOAD_INT(pconf , "pop3_min_bind_port" , conf->pop3_min_bind_port);
-	LOAD_INT(pconf , "pop3_max_bind_port" , conf->pop3_max_bind_port);
-
-	LOAD_INT(pconf , "enable_smtp" , conf->enable_smtp);
-	LOAD_STRING(pconf , "smtp_port" , ports , sizeof(ports));
-    split_ports(conf->smtp_ports, ports);
-	LOAD_INT(pconf , "smtp_proxy_listen_port" , conf->smtp_proxy_listen_port);
-	LOAD_INT(pconf , "smtp_min_bind_port" , conf->smtp_min_bind_port);
-	LOAD_INT(pconf , "smtp_max_bind_port" , conf->smtp_max_bind_port);
-
-    LOAD_INT(pconf , "av_service_port" , conf->av_service_port);
-    LOAD_STRING(pconf , "av_engine_version" ,   conf->av_engine_version , MAX_VERSION_LEN);
-	LOAD_STRING(pconf , "av_signature_version" ,   conf->av_signature_version , MAX_VERSION_LEN);
-	LOAD_INT(pconf , "av_enable_real_time" , conf->av_enable_real_time);
-	LOAD_INT(pconf , "av_enable_pop3" , conf->av_enable_pop3);
-	LOAD_INT(pconf , "av_enable_smtp" , conf->av_enable_smtp);
-	LOAD_INT(pconf , "av_virus_fate" , conf->av_virus_fate);
-	LOAD_INT(pconf , "av_real_time_virus_fate" , conf->av_real_time_virus_fate);
-	
-	LOAD_STRING(pconf , "av_signature_path", conf->av_signature_path,MAX_FILE_NAME);
-    LOAD_STRING(pconf , "av_update_server", conf->av_update_server,sizeof(conf->av_update_server));
-    LOAD_STRING(pconf , "av_update_time", conf->av_update_time, sizeof(conf->av_update_time));
-	LOAD_INT(pconf , "av_cache_max_dir" , conf->av_cache_max_dir);
-	LOAD_INT(pconf , "av_cache_max_file" , conf->av_cache_max_file);
-	LOAD_INT(pconf , "av_max_open_scan_file" , conf->av_max_open_scan_file);
-	LOAD_INT(pconf , "av_real_time_valid" , conf->av_real_time_valid);
-	LOAD_INT(pconf , "av_rtscan_instance" , conf->av_rtscan_instance);
-	LOAD_INT(pconf , "av_backendscan_instance" , conf->av_backendscan_instance);
-	
-    LOAD_INT(pconf , "av_enable_grayware" , conf->av_enable_grayware);
-	LOAD_INT(pconf , "av_enable_rt_grayware" , conf->av_enable_rt_grayware);
-    LOAD_INT(pconf , "av_enable_heuristic" , conf->av_enable_heuristic);
-	LOAD_INT(pconf , "av_enable_rt_heuristic" , conf->av_enable_rt_heuristic);
-	LOAD_INT(pconf , "av_enable_compress_scan" , conf->av_enable_compress_scan);
-	LOAD_INT(pconf , "av_compress_limit" , conf->av_compress_limit);
-	LOAD_INT(pconf , "av_enable_rt_compress_scan" , conf->av_enable_rt_compress_scan);
-	LOAD_INT(pconf , "av_rt_compress_limit" , conf->av_rt_compress_limit);
-	LOAD_INT(pconf , "av_rt_broadcast_console" , conf->av_rt_broadcast_console);
-	LOAD_INT(pconf , "av_rt_alert_to_gui" , conf->av_rt_alert_to_gui);
-
-    snprintf(conf->trust_file_cache, sizeof(conf->trust_file_cache),"%s/trust_cache", conf->av_sig_dir);
-
     conf_close(pconf);
 	
 	return 0;
@@ -143,47 +71,6 @@ int  load_conf(struct   fctl_conf_t* conf, char* filename){
 	
 	return buf+i;
 }
-
-/*
- *	file descriptor printf()
-*/
-
-int fdprintf(int fd, char* format, ...)
-{
-	va_list ap;
-	char buf[1024];
-	int size, res, pos;
-
-	va_start(ap, format);
-	size = vsnprintf(buf, sizeof(buf), format, ap);
-	va_end(ap);
-
-	if (size == -1 || size > sizeof(buf)) {
-		errno = ENOMEM;
-		return -1;
-	}
-
-	for (pos = 0;;) {
-/*
-		if (timedout) {
-			errno = ETIMEDOUT;
-			return -1;
-		}
-*/
-		if ((res = write(fd, buf+pos, size-pos)) == -1) {
-			if (errno == EINTR) continue;
-//			if (errno == ECONNRESET) return -1;
-			return -1;
-		}
-
-		if (res == 0) break;
-
-		pos += res;
-		if (pos == size) break;
-	}
-
-	return res;
-} /* fdprintf() */
 
 void format_time(time_t time_int , char*time_str , int len ){
     strftime(time_str, len, "%m/%d/%Y %T", localtime(&time_int));

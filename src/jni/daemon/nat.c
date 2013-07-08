@@ -91,7 +91,8 @@ void init_iptables_nat_rules(){
 #ifdef __linux__
     snprintf(cmd , sizeof(cmd), "%s -t nat -F", g_conf.iptables);
 	system(cmd);
-    snprintf(cmd , sizeof(cmd), "%s -t nat -A OUTPUT -p tcp --sport 61000:65535 -j ACCEPT", g_conf.iptables);
+    //snprintf(cmd , sizeof(cmd), "%s -t nat -A OUTPUT -p tcp --sport 61000:65535 -j ACCEPT", g_conf.iptables);
+	snprintf(cmd , sizeof(cmd), "%s -t nat -A OUTPUT -m owner --uid-owner 0 -j ACCEPT", g_conf.iptables);
 	system(cmd);
 #endif
 

@@ -103,8 +103,7 @@ struct fctl_proxy_t{
     char proto_name[PROTO_NAME_LEN];
     
     unsigned int cur_session_id;
-    char worker_sock_path[MAX_FILE_NAME];
-
+ 
     struct list_head	session_head;
 	
     int  (*run)(struct fctl_proxy_t*);		
@@ -112,13 +111,11 @@ struct fctl_proxy_t{
     int  (*read)(int  , char* , int);
     int  (*write)(int  , char*  , int );
     int  (*listen)(struct fctl_proxy_t*);
-    int  (*worker_listen)(struct fctl_proxy_t*);	
     int  (*local_send)(struct fctl_proxy_t* , struct fctl_session_t *);
     int  (*remote_send)(struct fctl_proxy_t* , struct fctl_session_t *);
     int  (*local_close)(struct fctl_proxy_t* , struct fctl_session_t *);
     int  (*remote_close)(struct fctl_proxy_t* , struct fctl_session_t *);
     int  (*remote_connect)(struct fctl_proxy_t* , struct fctl_session_t *, const char*, int);
-    int  (*send_event)(struct fctl_proxy_t* ,struct event_header_t*);
 };
 struct fctl_proxy_ops_t{
     int  (*run)(struct fctl_proxy_t*);

@@ -69,10 +69,7 @@ struct fctl_proxy_t* np_new(struct fctl_proto_t* proto, int port,
     proxy->local_close = __close_local;
     proxy->remote_close = __close_remote;
     proxy->remote_connect = __do_connect_remote;
-    
-    snprintf(proxy->worker_sock_path, sizeof(proxy->worker_sock_path), 
-        "%s/%d", g_conf.spool_dir, port);
- 			
+     			
     return proxy;	
 }
 
@@ -508,53 +505,6 @@ static inline  int __do_new_local_connection(struct fctl_proxy_t* proxy, int lis
     return 0;
 }
 
-static inline  int __do_notification(struct fctl_proxy_t* proxy, int listenfd) {
-   /* 
-    struct list_head *pos =  NULL;	  
-    char buf[2048];
-    socklen_t len = 0; 
-    int n = 0, found = 0;
-    struct sockaddr_un cliaddr;
-     
-    len = sizeof(struct sockaddr_un);
-    n = recvfrom(listenfd, buf, sizeof(buf), 0, (struct sockaddr*)&cliaddr, &len);
-     
-    if (n <  sizeof(struct event_header_t)) {
-        ERRLOG("work socket recvfrom error:%s", strerror(errno));
-        return -1;   
-    }
-    struct event_header_t* header = (struct event_header_t*)buf;
-    
-    DBGLOG("session id = %d", header->session_id);
-    DBGLOG("event type = %d", header->event_type);
-    DBGLOG("event len = %d, receive len=%d", header->event_len, n);
-     
-    if (n < header->event_len){
-        ERRLOG("worker socket error: size is %d ,but %d is required", n , header->event_len);
-        return -3;
-    }
-     
-     struct fctl_session_t *session;
-     
-     list_for_each(pos, &proxy->session_head) {
-         session = (struct fctl_session_t *)pos;
-         if (session->session_id == header->session_id) {
-            found = 1;
-            break;
-        }
-     }
-     if (!found){
-        ERRLOG("worker socket error: session %d did not be found!", header->session_id);
-        return -2;
-     }       
-     
-     if (proxy->proto->on_notification)
-        proxy->proto->on_notification(session , header);
-     
-     return 0;
-*/
-    return 0;
-}
 
 static inline int __do_remote_connected(struct fctl_proxy_t* proxy, struct fctl_session_t *session){
     int ret = 0;
@@ -884,21 +834,9 @@ static int np_do_proxy(struct fctl_proxy_t* proxy){
 
 static void sig_reload_config(int signo)  
 {
- /*   DBGLOG("reload configuration");
+   	DBGLOG("reload configuration");
     load_conf(&g_conf , g_configfile);  
-    log_init(g_conf.log_level, FCTLOG_SOURCE_PROXY , g_conf.avlogd_sock);
-
-    cfg_get_av_sig_version(g_conf.av_signature_version);
-    cfg_get_av_engine_version(g_conf.av_engine_version, sizeof(g_conf.av_engine_version), NULL);
-
-    struct fct_settings settings; 
-    fctsetting_init(&settings);
-    fctsetting_load(&settings, FCT_DEFAULT_SETTING_FILE);
-    g_conf.av_enable_real_time  =  settings.rtscan_enable; 
-    fctsetting_destroy(&settings);
-
-    //Signaure may be updated , so the binary cookie need to be updated too.
-    FcckUpdateCookie();*/
+    log_init(g_conf.log_level, FCTLOG_SOURCE_PROXY , g_conf.log_file);
 }
 
 static void  sig_int(int signo){

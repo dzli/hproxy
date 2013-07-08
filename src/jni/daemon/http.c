@@ -93,18 +93,22 @@ static int http_local_rev(struct fctl_session_t* session, char* buf , int buflen
 	}
 	struct http_parser_t hp = {0};
 	http_update_req(&hp, buf, header_len);
-	
+
+#if 0 // output for debug purpose
 	int j = 0;
 	for (; j<header_len; j++){
 		printf("%c", buf[j]);
 	}
-	
+#endif	
+
 	char* new_url = strstr(hp.hlines[0].new_line, " ");
 	if (new_url)
 		new_url++;
-	printf("url: %s\n", new_url); 	
+	
+	INFOLOG("url: %s\n", new_url); 	
+	
 	int need_proxy = url_need_proxy(new_url);
-       
+ 
 	if (session->remote_fd <= 0){
 	 	int r = 0; 
 	 	if (need_proxy){
