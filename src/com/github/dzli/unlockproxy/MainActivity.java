@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 public class MainActivity extends Activity
 {
-    static final String DATA_DIR = "/data/data/com.example.myfirstapp";
+    static final String DATA_DIR = "/data/data/com.github.dzli.unlockproxy";
 
     /** Called when the activity is first created. */
     @Override
@@ -14,8 +14,8 @@ public class MainActivity extends Activity
         {   
             super.onCreate(savedInstanceState);
             setContentView(R.layout.main);
-            copyFilesInAssets("htest", DATA_DIR + "/htest");
-            chgFilePermission(DATA_DIR + "/htest", "755");
+            copyFilesInAssets("hproxy", DATA_DIR + "/hproxy");
+            chgFilePermission(DATA_DIR + "/hproxy", "755");
         }   
 
     private void copyFilesInAssets(String fileName, String toPath)
