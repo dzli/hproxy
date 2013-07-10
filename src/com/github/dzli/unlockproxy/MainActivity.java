@@ -78,6 +78,23 @@ public class MainActivity extends Activity
         }
     }
 
+    private void testStartProxy()
+    {   
+        String cmd = "/system/bin/ls >"  + DATA_DIR +"/output.txt";
+        String[] strExec = new String[] 
+        {   
+            "/system/bin/sh", "-c", cmd 
+        };  
+
+        try {
+            Runtime.getRuntime().exec(strExec);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }   
+    }   
+
+
     public void startProxy(View view) {
 
         doStartProxy();
