@@ -64,6 +64,17 @@ public class MainActivity extends Activity
         }   
     }   
 
+    private void startProxy()
+    {
+        try {
+            Process p =  Runtime.getRuntime().exec("su");
+            p.getOutputStream().write((DATA_DIR+"/hproxy start -c "+DATA_DIR+"/hproxy.conf").getBytes());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     public void startProxy(View view) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
