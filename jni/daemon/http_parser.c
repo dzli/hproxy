@@ -138,23 +138,27 @@ static int new_random_ip(char* ip, int maxip)
     return 0;
 }
 
-int new_sogou_proxy_addr(char* ip, int maxip) {
+int new_sogou_proxy_addr_recur(char* ip, int maxip, int depth) {
     char new_addr[256] = {0};
     int maxaddr = sizeof(new_addr);
     static char resolved_addr[64][32] = {{0}}; 
 
 #if 0 //for test use
-    strncpy(ip, "220.181.118.155", maxip-1);
+    strncpy(ip, "220.181.118.162", maxip-1);
     return 0;
 #endif
     char*  other_ip_addrs[] = {
         "220.181.118.128",
     };
 
+    if (depth <0)
+        return -10;
+
     int random_num = (random()/(double)RAND_MAX) * (16 + 16 + sizeof(other_ip_addrs)/sizeof(other_ip_addrs[0]));  // 0 ~ 15 edu, 0 ~ 15 dxt
+    printf("random: %d\n", random_num);
     if (random_num < 16) {
         if (8 == random_num || 12 == random_num) {
-            return  new_sogou_proxy_addr(new_addr, maxaddr); // just retry
+            return  new_sogou_proxy_addr_recur(ip, maxip, --depth); // just retry
         }else
             snprintf(new_addr, maxaddr, "h%d.dxt.bj.ie.sogou.com", random_num);
     } else if (random_num < 16 + 16) {
@@ -173,7 +177,7 @@ int new_sogou_proxy_addr(char* ip, int maxip) {
         hints.ai_socktype = SOCK_STREAM;
         error = getaddrinfo(new_addr, "80", &hints, &res0);
         if (error || res0 == NULL) {
-            return -2;
+            return  new_sogou_proxy_addr_recur(ip, maxip, --depth); // just retry
         }
         res = res0;
         char o[32] = {0};
@@ -184,6 +188,11 @@ int new_sogou_proxy_addr(char* ip, int maxip) {
     strncpy(ip, resolved_addr[random_num], maxip-1);
 
     return 0;
+}
+
+int new_sogou_proxy_addr(char* ip, int maxip) 
+{
+    return  new_sogou_proxy_addr_recur(ip, maxip, 5); // just retry
 }
 
 static int new_sogou_auth_str(char* auth, int maxauth) 
@@ -655,7 +664,8 @@ int main(int argc, char* argv[])
     char sogo_tag[64] = {0};
     char sogo_auth[128] = {0};
     int i = 0;
-    for(; i < 16; i++){
+    for(; i < 64; i++){
+        sogo_auth[0] = 0;
         new_sogou_proxy_addr(sogo_auth, sizeof(sogo_auth));
         printf("sogo addr: %s\n", sogo_auth);
     }

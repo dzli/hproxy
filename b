@@ -5,7 +5,7 @@ function do_debug
     cd jni
     ndk-build
     cd -
-    cp libs/armeabi/htest assets
+    cp libs/armeabi/hproxy assets
     cp jni/daemon/hproxy.conf assets
     ant debug 
 }

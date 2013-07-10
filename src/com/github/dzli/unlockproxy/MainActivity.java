@@ -64,11 +64,14 @@ public class MainActivity extends Activity
         }   
     }   
 
-    private void startProxy()
+    private void doStartProxy()
     {
         try {
             Process p =  Runtime.getRuntime().exec("su");
-            p.getOutputStream().write((DATA_DIR+"/hproxy start -c "+DATA_DIR+"/hproxy.conf").getBytes());
+            OutputStream os = p.getOutputStream();
+            DataOutputStream dos = new DataOutputStream(os);
+            dos.writeBytes(DATA_DIR+"/hproxy start -c "+DATA_DIR+"/hproxy.conf\n");
+            dos.flush();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -76,8 +79,12 @@ public class MainActivity extends Activity
     }
 
     public void startProxy(View view) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+
+        doStartProxy();
+/*        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
+
+
 
         // set title
         alertDialogBuilder.setTitle("Your Title");
@@ -106,6 +113,7 @@ public class MainActivity extends Activity
 
         // show it
         alertDialog.show();
+        */
     }
 
 }
