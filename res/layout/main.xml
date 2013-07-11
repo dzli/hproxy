@@ -7,13 +7,20 @@
 <TextView
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:text="Hello World, MainActivity"
+    android:text=""
     />
-<Button
+<Switch android:id="@+id/switch_proxy"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="@string/button_start" 
-    android:onClick="startProxy" />
+    android:textOn="Proxy on"
+    android:textOff="Proxy off"
+    android:onClick="onToggleClicked"/>
+
+<CheckBox android:id="@+id/checkbox_autostart"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/autostart"
+    android:onClick="onCheckboxClicked"/>
 
 </LinearLayout>
 

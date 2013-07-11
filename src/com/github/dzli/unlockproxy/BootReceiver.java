@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.os.Bundle;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 public class BootReceiver extends BroadcastReceiver
 {
@@ -12,7 +13,11 @@ public class BootReceiver extends BroadcastReceiver
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        doStartProxy();
+
+        SharedPreferences sharedPref = context.getSharedPreferences("hproxy", Context.MODE_PRIVATE);
+        boolean autostartValue = sharedPref.getBoolean("EnableAutoStart", false);
+        if (autostartValue)
+            doStartProxy();
     }
 
     private void doStartProxy()

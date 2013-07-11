@@ -7,6 +7,9 @@ import android.app.AlertDialog;
 import android.view.View;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.widget.Switch;
+import android.widget.CheckBox;
+import android.content.SharedPreferences;
 
 public class MainActivity extends Activity
 {
@@ -22,7 +25,26 @@ public class MainActivity extends Activity
             copyFilesInAssets("hproxy", DATA_DIR + "/hproxy");
             chgFilePermission(DATA_DIR + "/hproxy", "755");
             copyFilesInAssets("hproxy.conf", DATA_DIR + "/hproxy.conf");
+
+            SharedPreferences sharedPref = getMyPreferences();
+            boolean autostartValue = sharedPref.getBoolean("EnableAutoStart", false);
+            CheckBox autostartCheckBox = (CheckBox) findViewById(R.id.checkbox_autostart);
+            autostartCheckBox.setChecked(autostartValue);
+
+            Switch s = (Switch) findViewById(R.id.switch_proxy);
+            s.setChecked(proxyIsRunning());
         }   
+
+    private SharedPreferences getMyPreferences()
+    {
+        return getSharedPreferences("hproxy", Context.MODE_PRIVATE);
+    }
+
+    private boolean proxyIsRunning(){
+        String pidFilePath = "/data/local/tmp/hproxy.pid"; 
+        java.io.File file = new java.io.File(pidFilePath);
+        return file.exists();
+    }
 
     private void copyFilesInAssets(String fileName, String toPath)
     {   
@@ -78,6 +100,20 @@ public class MainActivity extends Activity
         }
     }
 
+    private void doStopProxy()
+    {
+        try {
+            Process p =  Runtime.getRuntime().exec("su");
+            OutputStream os = p.getOutputStream();
+            DataOutputStream dos = new DataOutputStream(os);
+            dos.writeBytes(DATA_DIR+"/hproxy stop -c "+DATA_DIR+"/hproxy.conf\n");
+            dos.flush();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     private void testStartProxy()
     {   
         String cmd = "/system/bin/ls >"  + DATA_DIR +"/output.txt";
@@ -94,43 +130,29 @@ public class MainActivity extends Activity
         }   
     }   
 
+    public void onToggleClicked(View view) 
+    {
+        boolean on = ((Switch) view).isChecked();
 
-    public void startProxy(View view) {
+        if (on) {
+            doStartProxy();
+        } else {
+            doStopProxy();
+        }
+    }
 
-        doStartProxy();
-/*        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                context);
+    public void onCheckboxClicked(View view) 
+    {
+        boolean checked = ((CheckBox) view).isChecked();
 
-
-
-        // set title
-        alertDialogBuilder.setTitle("Your Title");
-
-        // set dialog message
-        alertDialogBuilder
-            .setMessage("Click yes to exit!")
-            .setCancelable(false)
-            .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
-                    // if this button is clicked, close
-                    // current activity
-                    MainActivity.this.finish();
-                    }
-                    })
-        .setNegativeButton("No",new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog,int id) {
-                // if this button is clicked, just close
-                // the dialog box and do nothing
-                dialog.cancel();
-                }
-                });
-
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-
-        // show it
-        alertDialog.show();
-        */
+        switch(view.getId()) {
+            case R.id.checkbox_autostart:
+                SharedPreferences sharedPref = getMyPreferences();
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean("EnableAutoStart", checked);
+                editor.commit();
+                break;
+        }
     }
 
 }
