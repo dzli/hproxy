@@ -154,6 +154,7 @@ int new_sogou_proxy_addr_recur(char* ip, int maxip, int depth) {
     if (depth <0)
         return -10;
 
+    srandom(time(0));
     int random_num = (random()/(double)RAND_MAX) * (16 + 16 + sizeof(other_ip_addrs)/sizeof(other_ip_addrs[0]));  // 0 ~ 15 edu, 0 ~ 15 dxt
     printf("random: %d\n", random_num);
     if (random_num < 16) {
